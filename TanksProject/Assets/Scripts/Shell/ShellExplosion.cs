@@ -20,6 +20,8 @@ public class ShellExplosion : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+
+        if (other.isTrigger) return;
         // Find all the tanks in an area around the shell and damage them.
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, m_ExplosionRadius, m_TankMask | destroy );
@@ -40,9 +42,9 @@ public class ShellExplosion : MonoBehaviour
             targetHealth.TakeDamage(damage);           
             if(cubeDes != null)
             cubeDes.TakeDamage((int)damage);
-            print("Damage Taken");
+            //print("Damage Taken");
 
-            print(damage);
+            //print(damage);
         }
 
         m_ExplosionParticles.transform.parent = null;

@@ -16,11 +16,26 @@ public class AINavMesh : MonoBehaviour {
     private float fireRate = 2;
     private float fireCounter = 0;
 
+    public bool playerInSight = false;
+
+    private bool isPatrolling;
+    private bool isChasing;
+    private bool isLookingFor;
+
+    public bool isHearable = false;
+    public bool shootable = false;
+
+    private EnemySight enemySight;
+
+    //private State[] states;
+
     // Use this for initialization
     void Start () {
         agent = GetComponent<NavMeshAgent>();
         nextPatrolPoint = 0;
         agent.autoBraking = false;
+
+        enemySight = GetComponent<EnemySight>();
 
         player = GameObject.FindGameObjectWithTag("Player");
         Patrol();
@@ -28,11 +43,69 @@ public class AINavMesh : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+
+        playerInSight = enemySight.playerInSight;
+
+        if (isPatrolling && playerInSight)
         {
-            Patrol();
+            Chase();
         }
+        else if(isPatrolling && !playerInSight)
+        {
+            if (!agent.pathPending && agent.remainingDistance < 0.5f)
+            {
+                Patrol();
+            }
+        }
+        else if(isChasing)
+        {
+            Chase();
+        }
+        else if(isLookingFor && playerInSight)
+        {
+            Chase();
+        }
+        else if (isLookingFor && !playerInSight)
+        {
+            if (!agent.pathPending && agent.remainingDistance < 0.5f)
+            {
+                Patrol();
+            }
+        }
+        if(isHearable && !playerInSight)
+        {
+            Chase();
+            Debug.Log("ICh Höre und verfolge");
+            //LookForThePlayer(player.transform.position);
+        }
+
+    }
+
+    private void Fire()
+    {
+        gameObject.GetComponent<AIShooting>().FireAI(distanceToPlayer);
+    }
+
+    void Patrol()
+    {
+        isPatrolling = true;
+        isLookingFor = false;
+        isChasing = false;
+        if (patrolPoints.Length > 0)
+        {
+            agent.destination = patrolPoints[nextPatrolPoint].position;
+            nextPatrolPoint = (nextPatrolPoint + 1) % patrolPoints.Length;
+        }
+    }
+
+    void Chase()
+    {
+
+        isPatrolling = false;
+        isLookingFor = false;
+        isChasing = true;
         //Disntace zum Spieler berechnen
+        agent.destination = player.transform.position;
         distanceToPlayer = Mathf.Abs((player.transform.position - transform.position).magnitude);
 
         if (distanceToPlayer <= maxDistanceToPlayer)
@@ -47,24 +120,37 @@ public class AINavMesh : MonoBehaviour {
                 Fire();
                 fireCounter = 0;
             }
-            
+
 
         }
         else agent.isStopped = false;
 
-    }
-
-    private void Fire()
-    {
-        gameObject.GetComponent<TankShooting>().FireAI(distanceToPlayer);
-    }
-
-    void Patrol()
-    {
-        if (patrolPoints.Length > 0)
+        if (!playerInSight)
         {
-            agent.destination = patrolPoints[nextPatrolPoint].position;
-            nextPatrolPoint = (nextPatrolPoint + 1) % patrolPoints.Length;
+            LookForThePlayer(player.transform.position);
         }
     }
+
+    void LookForThePlayer(Vector3 lastPlayerPosition)
+    {
+        isChasing = false;
+        isPatrolling = false;
+        isLookingFor = true;
+
+        agent.destination = lastPlayerPosition;
+        if (agent.isStopped == true) agent.isStopped = false; 
+    }
+
+
+    void OnDrawGizmosSelected()
+    {
+        if (isChasing) Gizmos.color = Color.red;
+        if (isLookingFor) Gizmos.color = Color.blue;
+        if (isPatrolling) Gizmos.color = Color.green;
+
+        Gizmos.DrawCube(new Vector3(transform.position.x + 2, transform.position.y, transform.position.z), new Vector3(1,1,1));
+        //Debug.Log("ich Male");
+
+    }
+
 }

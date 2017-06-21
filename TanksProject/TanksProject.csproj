@@ -90,6 +90,8 @@
     <Compile Include="Assets\PluggableAI\Scripts\PatrolAction.cs" />
     <Compile Include="Assets\PluggableAI\Scripts\State.cs" />
     <Compile Include="Assets\PluggableAI\Scripts\StateController.cs" />
+    <Compile Include="Assets\Scripts\AIScripts\AIShooting.cs" />
+    <Compile Include="Assets\Scripts\AIScripts\EnemySight.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraControl.cs" />
     <Compile Include="Assets\Scripts\DoorOpener.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
