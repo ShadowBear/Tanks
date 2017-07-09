@@ -120,12 +120,12 @@ public class TankMovement : MonoBehaviour
 
     private void Shield()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKey(KeyCode.Q))
         {
             shield.SetActive(true);
             gameObject.GetComponent<TankHealth>().indestructable = true;
         }
-        if (Input.GetKeyUp(KeyCode.Q))
+        else //if (Input.GetKeyUp(KeyCode.Q))
         {
             shield.SetActive(false);
             gameObject.GetComponent<TankHealth>().indestructable = false;
@@ -134,12 +134,13 @@ public class TankMovement : MonoBehaviour
 
     private void FireRing()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKey(KeyCode.E))
         {
             fireRing.SetActive(true);
-            fireRing.GetComponent<ParticleSystem>().Play();
+            fireRing.GetComponentInChildren<ParticleSystem>().Play();
+            
         }
-        if (Input.GetKeyUp(KeyCode.E))
+        else //if (Input.GetKeyUp(KeyCode.E))
         {
             fireRing.SetActive(false);
         }

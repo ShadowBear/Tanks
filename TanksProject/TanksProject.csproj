@@ -84,6 +84,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ColorChanger.cs" />
     <Compile Include="Assets\DoorOpen.cs" />
     <Compile Include="Assets\PluggableAI\Scripts\Action.cs" />
     <Compile Include="Assets\PluggableAI\Scripts\EnemyStats.cs" />
