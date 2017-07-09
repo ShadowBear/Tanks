@@ -92,10 +92,12 @@
     <Compile Include="Assets\PluggableAI\Scripts\StateController.cs" />
     <Compile Include="Assets\Scripts\AIScripts\AIShooting.cs" />
     <Compile Include="Assets\Scripts\AIScripts\EnemySight.cs" />
+    <Compile Include="Assets\Scripts\AIScripts\RandomPosition.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraControl.cs" />
     <Compile Include="Assets\Scripts\DoorOpener.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\TankManager.cs" />
+    <Compile Include="Assets\Scripts\Particel\ShieldParticel.cs" />
     <Compile Include="Assets\Scripts\Shell\ShellExplosion.cs" />
     <Compile Include="Assets\Scripts\Tank\AINavMesh.cs" />
     <Compile Include="Assets\Scripts\Tank\DestroyCube.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="Assets\Scripts\Tank\TankHealth.cs" />
     <Compile Include="Assets\Scripts\Tank\TankMovement.cs" />
     <Compile Include="Assets\Scripts\Tank\TankPatrol.cs" />
+    <Compile Include="Assets\Scripts\Tank\TankShield.cs" />
     <Compile Include="Assets\Scripts\Tank\TankShooting.cs" />
     <Compile Include="Assets\Scripts\Tile\HoldCharackter.cs" />
     <Compile Include="Assets\Scripts\Tile\MovingPlattform.cs" />

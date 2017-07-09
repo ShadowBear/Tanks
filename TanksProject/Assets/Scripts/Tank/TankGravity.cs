@@ -12,6 +12,7 @@ public class TankGravity : MonoBehaviour {
     //private float distance = 0;
     public ParticleSystem gravityField;
 
+    public GameObject druckwelle;   
 
     // Use this for initialization
     void Start () {
@@ -64,9 +65,18 @@ public class TankGravity : MonoBehaviour {
                 if (!rb) continue;
                 rb.AddExplosionForce(m_GravityForce, transform.position, m_GravityRadius);
             }
+            //for (int i = 0; i < druckwelle.Length; i++)
+            //{
+
+            //}
+
+            GameObject temp = Instantiate(druckwelle, transform.position,Quaternion.Euler(-90,0,0));
+
             gravityField.Pause();
             gravityField.Clear();
 
+            
+            Destroy(temp, 2f);
         }
     }
 }
