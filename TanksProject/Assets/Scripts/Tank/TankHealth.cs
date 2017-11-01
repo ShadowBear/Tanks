@@ -9,6 +9,8 @@ public class TankHealth : MonoBehaviour
     public Color m_FullHealthColor = Color.green;  
     public Color m_ZeroHealthColor = Color.red;    
     public GameObject m_ExplosionPrefab;
+    public GameObject shieldObject;
+    public TankShield tankShield;
 
     public bool indestructable = false;
     
@@ -27,7 +29,6 @@ public class TankHealth : MonoBehaviour
         m_ExplosionParticles.gameObject.SetActive(false);
     }
 
-
     private void OnEnable()
     {
         m_CurrentHealth = m_StartingHealth;
@@ -40,7 +41,8 @@ public class TankHealth : MonoBehaviour
     public void TakeDamage(float amount)
     {
         // Adjust the tank's current health, update the UI based on the new health and check whether or not the tank is dead.
-        if (!indestructable)
+        if (shieldObject.activeSelf && tankShield.power > 0) tankShield.TakeDMG(amount);
+        else
         {
             m_CurrentHealth -= amount;
             SetHealthUI();
@@ -49,10 +51,7 @@ public class TankHealth : MonoBehaviour
                 OnDeath();
             }
         }
-        else
-        {
-
-        }
+        
     }
 
 

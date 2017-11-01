@@ -12,7 +12,7 @@ public class AINavMesh : MonoBehaviour {
     private float distanceToPlayer;
     private GameObject player;
     public float maxDistanceToPlayer = 5f;      
-    public float smooth = 2.0F;
+    public float smooth = 2.0f;
     private float fireRate = 2;
     private float fireCounter = 0;
 
@@ -39,6 +39,17 @@ public class AINavMesh : MonoBehaviour {
 
     public float walkRadius = 5;
 
+    public bool shallDodge = false;
+
+    //States later in Use
+    //public enum State
+    //{
+    //    Patrol,
+    //    Chase,
+    //    Search,
+    //    Attack
+    //};
+
 
     //private State[] states;
 
@@ -52,20 +63,22 @@ public class AINavMesh : MonoBehaviour {
 
         player = GameObject.FindGameObjectWithTag("Player");
         Patrol();
-        //Invoke("dodgeAttack", 5f); //Teste dodging 
-        //dodgeAttack();
     }
 	
 	// Update is called once per frame
 	void Update () {
 
-        /*if (!agent.pathPending && agent.remainingDistance < 0.5f)
-        {
-            dodgeAttack();
-        }
-        //Invoke("dodgeAttack", 5f); //Teste dodging 
-        */
 
+        //BehaviourTree Schleife
+        // Wenn auf Patrouille und Player in Sicht -> Chase
+        // Wenn auf Patrouille und Player nicht in Sicht -> weiter Patrol
+        // Wenn Chase und nicht Dodge -> weiter Chase
+        // Wenn Spieler verloren -> LookForPlayer
+        // Wenn Spieler gesucht und gefunden -> Chase
+        // Wenn Spieler gesucht und nicht gefunden -> ScanAround -> Patrol
+
+
+        //Abfrage Player in Sichtweite
         playerInSight = enemySight.playerInSight;
 
         if (scanning)
@@ -74,10 +87,7 @@ public class AINavMesh : MonoBehaviour {
             return;
         }
 
-        if (isPatrolling && playerInSight)
-        {
-            Chase();
-        }
+        if (isPatrolling && playerInSight) Chase();
         else if(isPatrolling && !playerInSight)
         {
             if (!agent.pathPending && agent.remainingDistance < 0.5f)
@@ -87,12 +97,9 @@ public class AINavMesh : MonoBehaviour {
         }
         else if(isChasing)
         {
-            Chase();
+            if (!shallDodge) Chase();
         }
-        else if(isLookingFor && playerInSight)
-        {
-            Chase();
-        }
+        else if(isLookingFor && playerInSight) Chase();
         else if (isLookingFor && !playerInSight)
         {
             if (!agent.pathPending && agent.remainingDistance < 0.5f)
@@ -110,11 +117,7 @@ public class AINavMesh : MonoBehaviour {
         
     }
 
-    private void Fire()
-    {
-        gameObject.GetComponent<AIShooting>().FireAI(distanceToPlayer);
-    }
-
+    //Fahre zum Patrolpunkt Erreicht? -> nächster Patrolpunkt
     void Patrol()
     {
         isPatrolling = true;
@@ -128,6 +131,9 @@ public class AINavMesh : MonoBehaviour {
         alerted = false;
     }
 
+
+    // Verfolge den Spieler mithilfe der NavMeshMap
+    // Wenn Spieler nahe genug Attack
     void Chase()
     {
 
@@ -143,27 +149,33 @@ public class AINavMesh : MonoBehaviour {
 
         if (distanceToPlayer <= maxDistanceToPlayer)
         {
-            //Patroling Stoppen
+            gameObject.GetComponent<AIShooting>().attack = true;
+            ////Patroling Stoppen
             agent.isStopped = true;
-            //Gegner in die Richtung zum Spieler rotieren
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((player.transform.position - transform.position)), Time.deltaTime * smooth);
-            fireCounter += Time.deltaTime;
-            if (fireCounter > fireRate)
-            {
-                Fire();
-                fireCounter = 0;
-            }
-
-
+            ////Gegner in die Richtung zum Spieler rotieren
+            //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((player.transform.position - transform.position)), Time.deltaTime * smooth);
+            //// Auf Spieler mit bestimmer Feuerrate schiessen
+            //fireCounter += Time.deltaTime;
+            //if (fireCounter > fireRate)
+            //{
+            //    Fire();
+            //    fireCounter = 0;
+            //}
         }
-        else agent.isStopped = false;
+        else
+        {
+            //agent.isStopped = false;
+            gameObject.GetComponent<AIShooting>().attack = false;
+        }
 
+        // Spieler verloren -> zur letzten bekannten Position fahren
         if (!playerInSight)
         {
             LookForThePlayer(player.transform.position);
         }
     }
 
+    // zur letzten bekannten Position fahren
     void LookForThePlayer(Vector3 lastPlayerPosition)
     {
         isChasing = false;
@@ -174,12 +186,15 @@ public class AINavMesh : MonoBehaviour {
         if (agent.isStopped == true) agent.isStopped = false; 
     }
 
+
+    // Andere KI hat Spieler entdeckt und gibt Position weiter
     public void AlertFromOther(Vector3 position)
     {
         LookForThePlayer(position);
         alerted = true;
     }
 
+    // Spieler entdeckt und an ander KI in der naehe weitergeben
     private void AlertOther(Vector3 position)
     {
         Collider[] others = Physics.OverlapSphere(transform.position, alertRadius, enemyMask);
@@ -188,12 +203,12 @@ public class AINavMesh : MonoBehaviour {
             if(others[i] != gameObject.GetComponent<Collider>())
             {
                 if(others[i].GetComponent<AINavMesh>() != null) others[i].GetComponent<AINavMesh>().AlertFromOther(position);
-            }
-            
-        }
-        
+            }            
+        }        
     }
 
+
+    //Umkreis um den aktuellen Punkt abscannen
     private void ScanAround()
     {
         gameObject.transform.Rotate(0, Time.deltaTime * 90, 0);
@@ -213,20 +228,7 @@ public class AINavMesh : MonoBehaviour {
         }
     }
 
-
-    private void dodgeAttack()
-    {       
-
-        Vector3 randomDodge = UnityEngine.Random.insideUnitSphere * walkRadius;
-
-        randomDodge += transform.position;
-        NavMeshHit hit;
-        NavMesh.SamplePosition(randomDodge, out hit, walkRadius, 1);
-        Vector3 dodgePoint = hit.position;
-        agent.SetDestination(dodgePoint);
-    }
-
-
+    //BugFinder
     void OnDrawGizmosSelected()
     {
         if (isChasing) Gizmos.color = Color.red;
@@ -240,11 +242,6 @@ public class AINavMesh : MonoBehaviour {
 
         Gizmos.DrawSphere(transform.position, 1);
 
-    }
-
-    void OnDrawGizmo()
-    {
-        
     }
 
 }

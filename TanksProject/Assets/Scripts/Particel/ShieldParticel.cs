@@ -23,6 +23,7 @@ public class ShieldParticel : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
+    // Aendern des Schild Effekts Texture Offset Hoch/Runter fahren lassen
 	void Update () {
         //offset = ((Time.time * scrollSpeed) % 0.7f) - 0.1f;
         //if (offset < 0 || offset > 0.6f) swap = !swap;

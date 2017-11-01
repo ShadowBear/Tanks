@@ -57,7 +57,7 @@ public class TankMovement : MonoBehaviour
         m_MovementInputValue = Input.GetAxis(m_MovementAxisName);
         m_TurnInputValue = Input.GetAxis(m_TurnAxisName);
 
-        EngineAudio();
+        //EngineAudio();
     }
 
 
@@ -122,13 +122,17 @@ public class TankMovement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Q))
         {
-            shield.SetActive(true);
-            gameObject.GetComponent<TankHealth>().indestructable = true;
+            //shield.SetActive(true);
+            shield.GetComponent<MeshRenderer>().enabled = true;
+            shield.GetComponent<Light>().enabled = true;
+            //gameObject.GetComponent<TankHealth>().indestructable = true;
         }
         else //if (Input.GetKeyUp(KeyCode.Q))
         {
-            shield.SetActive(false);
-            gameObject.GetComponent<TankHealth>().indestructable = false;
+            //shield.SetActive(false);
+            //gameObject.GetComponent<TankHealth>().indestructable = false;
+            shield.GetComponent<MeshRenderer>().enabled = false;
+            shield.GetComponent<Light>().enabled = false;
         }
     }
 
