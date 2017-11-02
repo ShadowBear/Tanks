@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class TankHealth : MonoBehaviour
 {
@@ -13,12 +14,16 @@ public class TankHealth : MonoBehaviour
     public TankShield tankShield;
 
     public bool indestructable = false;
-    
-    
+    public bool respawned = false;
+    public Transform lastRespawenPoint;
+
+
     private AudioSource m_ExplosionAudio;          
     private ParticleSystem m_ExplosionParticles;   
     public float m_CurrentHealth;  
-    private bool m_Dead;            
+    private bool m_Dead;
+
+    private bool corStarted = false;     
 
 
     private void Awake()
@@ -37,6 +42,22 @@ public class TankHealth : MonoBehaviour
         SetHealthUI();
     }
     
+
+    void Update()
+    {
+        if (this.gameObject != GameObject.FindGameObjectWithTag("Player"))
+        {
+            if (GameObject.FindGameObjectWithTag("Player").GetComponent<TankHealth>().respawned && !corStarted)
+            {
+                m_CurrentHealth = m_StartingHealth;
+                SetHealthUI();
+                corStarted = true;
+                gameObject.GetComponent<AIShooting>().attack = false;
+                StartCoroutine(ResetRespawn());
+            }
+        }
+    }
+
 
     public void TakeDamage(float amount)
     {
@@ -88,6 +109,27 @@ public class TankHealth : MonoBehaviour
         m_ExplosionParticles.Play();
         m_ExplosionAudio.Play();
 
-        gameObject.SetActive(false);
+        if(this.gameObject == GameObject.FindGameObjectWithTag("Player"))
+        {
+            RespawnAtCheckPoint();
+        }else gameObject.SetActive(false);
+
     }
+
+    private void RespawnAtCheckPoint()
+    {
+        transform.position = lastRespawenPoint.position;
+        respawned = true;
+        OnEnable();
+    }
+
+    IEnumerator ResetRespawn()
+    {
+        yield return new WaitForSeconds(2f);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<TankHealth>().respawned = false;
+        corStarted = false;
+        yield return null;
+
+    }
+
 }

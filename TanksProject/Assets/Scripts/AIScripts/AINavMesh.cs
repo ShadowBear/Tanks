@@ -80,6 +80,16 @@ public class AINavMesh : MonoBehaviour {
 
         //Abfrage Player in Sichtweite
         playerInSight = enemySight.playerInSight;
+        if (player.GetComponent<TankHealth>().respawned)
+        {
+            if (!isPatrolling)
+            {
+                Patrol();
+                print("Patroll ich wirklich");
+            }
+            print("Respawned jetzt also Patroll ich");
+            return;
+        }
 
         if (scanning)
         {

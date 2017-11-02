@@ -53,9 +53,21 @@ public class AIShooting : MonoBehaviour
         //if (attack && !m_Fired) m_Fired = true;
         //else if (!attack) m_Fired = false;
         if(IsInvoking("FireAI")) print("Der tud do no wat X.X");
-        if (attack && !m_Fired) StartCoroutine(FireAI((player.transform.position-transform.position).magnitude));
-        AIAgent.isStopped =  attack ? true : false;
+
         launchForce = (player.transform.position - transform.position).magnitude;
+        if (launchForce <= 30f)
+        {
+            if (attack && !m_Fired) StartCoroutine(FireAI(launchForce));
+        }
+        else
+        {
+            attack = false;
+        }
+        
+        AIAgent.isStopped =  attack ? true : false;
+        
+
+        
         if (attack && !specFire) 
         {
             //zum Spieler Drehen
