@@ -94,6 +94,7 @@ public class TankMovement : MonoBehaviour
         Turn();
         Shield();
         FireRing();
+        ReloadAmmu();
     }
 
 
@@ -147,6 +148,14 @@ public class TankMovement : MonoBehaviour
         else //if (Input.GetKeyUp(KeyCode.E))
         {
             fireRing.SetActive(false);
+        }
+    }
+
+    private void ReloadAmmu()
+    {
+        if (Input.GetKeyDown(KeyCode.R)){
+            TankShooting tankShoot = gameObject.GetComponent<TankShooting>();
+            if (tankShoot.ammu != 5) tankShoot.ammu = 0;
         }
     }
 

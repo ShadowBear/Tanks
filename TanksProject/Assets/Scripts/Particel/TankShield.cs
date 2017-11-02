@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TankShield : MonoBehaviour {
 
@@ -16,6 +17,8 @@ public class TankShield : MonoBehaviour {
     public bool death = false;
     public Light lightColor;
 
+    public Image shieldImage;
+
 
 
 	// Use this for initialization
@@ -30,7 +33,9 @@ public class TankShield : MonoBehaviour {
 	void Update () {
         ShieldColor();
 
-        playerShoot.shielded = rend.enabled ? true : false;        
+        playerShoot.shielded = rend.enabled ? true : false;
+
+        shieldImage.fillAmount = 1 * power/ maxPower;  
 
         if(resetTimer > 0) resetTimer -= Time.deltaTime;
 
@@ -38,7 +43,7 @@ public class TankShield : MonoBehaviour {
         {
 
             print("Regeneriere Mich");
-            power += (30 * Time.deltaTime);
+            power += (300 * Time.deltaTime);
             if (power > maxPower) power = maxPower;
         }
         else if (resetTimer <= 0 && death)
@@ -103,7 +108,7 @@ public class TankShield : MonoBehaviour {
             resetTimer = 3f;
             if (power <= 0 && !death)
             {
-                resetTimer = 5f;
+                resetTimer = 8f;
                 death = true;
             }
         }

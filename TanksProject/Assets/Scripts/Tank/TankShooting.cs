@@ -16,6 +16,14 @@ public class TankShooting : MonoBehaviour
     public float m_MaxLaunchForce = 30f; 
     public float m_MaxChargeTime = 0.75f;
     public bool shielded = false;
+    public Text ammuText;
+
+    public int ammu = 5;
+    public int maxAmmu = 5;
+    public bool canShoot = true;
+    private bool isReloading = false;
+    private float reloadTime = 2f;
+
 
     
     private string m_FireButton;         
@@ -44,6 +52,15 @@ public class TankShooting : MonoBehaviour
     {
         // Track the current state of the fire button and make decisions based on the current launch force.
         m_AimSlider.value = m_MinLaunchForce;
+        if (ammu == 0) ammuText.text = "R";
+        else ammuText.text = ammu.ToString();
+
+        if(ammu <= 0 && !isReloading)
+        {
+            isReloading = true;
+            StartCoroutine(ReloadAmmu());
+        }
+
 
         if (m_CurrentLaunchForce >= m_MaxLaunchForce && !m_Fired)
         {
@@ -51,7 +68,7 @@ public class TankShooting : MonoBehaviour
             m_CurrentLaunchForce = m_MaxLaunchForce;
             Fire();
         }
-        else if (Input.GetButtonDown(m_FireButton) && !shielded)
+        else if (Input.GetButtonDown(m_FireButton) && !shielded && canShoot)
         {
             // have we pressed fire for first time
             m_Fired = false;
@@ -59,13 +76,13 @@ public class TankShooting : MonoBehaviour
             m_ShootingAudio.clip = m_ChargingClip;
             m_ShootingAudio.Play();
         }
-        else if (Input.GetButton(m_FireButton) && !m_Fired && !shielded)
+        else if (Input.GetButton(m_FireButton) && !m_Fired && !shielded && canShoot)
         {
             // holding fire button not yet firede
             m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
             m_AimSlider.value = m_CurrentLaunchForce;
         }
-        else if (Input.GetButtonUp(m_FireButton) && !m_Fired && !shielded)
+        else if (Input.GetButtonUp(m_FireButton) && !m_Fired && !shielded && canShoot)
         {
             // released the fire button 
             Fire();
@@ -81,16 +98,22 @@ public class TankShooting : MonoBehaviour
     private void Fire()
     {
         // Instantiate and launch the shell.
-        m_Fired = true;
+       
 
-        Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
-        shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
-        shellInstance.GetComponent<ShellExplosion>().playerShell = true;
+        if (canShoot && ammu > 0)
+        {
+            m_Fired = true;
+            Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
+            shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
+            shellInstance.GetComponent<ShellExplosion>().playerShell = true;
+            ammu--;
 
-        m_ShootingAudio.clip = m_FireClip;
-        m_ShootingAudio.Play();
+            m_ShootingAudio.clip = m_FireClip;
+            m_ShootingAudio.Play();
 
-        m_CurrentLaunchForce = m_MinLaunchForce;
+            m_CurrentLaunchForce = m_MinLaunchForce;
+        }
+        
     }
 
 
@@ -112,6 +135,16 @@ public class TankShooting : MonoBehaviour
     public bool getFired()
     {
         return m_Fired;
+    }
+
+    IEnumerator ReloadAmmu()
+    {
+        canShoot = false;
+        yield return new WaitForSeconds(reloadTime);
+        ammu = maxAmmu;
+        canShoot = true;
+        isReloading = false;
+        yield return null;
     }
 
 

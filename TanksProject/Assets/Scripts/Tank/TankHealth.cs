@@ -45,7 +45,15 @@ public class TankHealth : MonoBehaviour
         if (shieldObject != null)
         {
             if (shieldObject.GetComponent<MeshRenderer>().enabled && tankShield.power > 0) tankShield.TakeDMG(amount);
-            //print("Schild ist nicht null AHA");
+            else
+            {
+                m_CurrentHealth -= amount;
+                SetHealthUI();
+                if (m_CurrentHealth <= 0f && !m_Dead)
+                {
+                    OnDeath();
+                }
+            }            
         }
         else
         {
