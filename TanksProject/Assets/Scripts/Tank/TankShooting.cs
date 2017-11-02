@@ -15,12 +15,14 @@ public class TankShooting : MonoBehaviour
     public float m_MinLaunchForce = 10f; 
     public float m_MaxLaunchForce = 30f; 
     public float m_MaxChargeTime = 0.75f;
+    public bool shielded = false;
 
     
     private string m_FireButton;         
     private float m_CurrentLaunchForce;  
     private float m_ChargeSpeed;         
-    private bool m_Fired = true;                
+    private bool m_Fired = true;      
+              
 
 
     private void OnEnable()
@@ -49,7 +51,7 @@ public class TankShooting : MonoBehaviour
             m_CurrentLaunchForce = m_MaxLaunchForce;
             Fire();
         }
-        else if (Input.GetButtonDown(m_FireButton))
+        else if (Input.GetButtonDown(m_FireButton) && !shielded)
         {
             // have we pressed fire for first time
             m_Fired = false;
@@ -57,22 +59,22 @@ public class TankShooting : MonoBehaviour
             m_ShootingAudio.clip = m_ChargingClip;
             m_ShootingAudio.Play();
         }
-        else if (Input.GetButton(m_FireButton) && !m_Fired)
+        else if (Input.GetButton(m_FireButton) && !m_Fired && !shielded)
         {
             // holding fire button not yet firede
             m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
             m_AimSlider.value = m_CurrentLaunchForce;
         }
-        else if (Input.GetButtonUp(m_FireButton) && !m_Fired)
+        else if (Input.GetButtonUp(m_FireButton) && !m_Fired && !shielded)
         {
             // released the fire button 
             Fire();
         }
-        else if (Input.GetKeyUp(KeyCode.Alpha1)) SpecialFireArms(1);
-        else if (Input.GetKeyUp(KeyCode.Alpha2)) SpecialFireArms(2);
-        else if (Input.GetKeyUp(KeyCode.Alpha3)) SpecialFireArms(3);
-        else if (Input.GetKeyUp(KeyCode.Alpha4)) SpecialFireArms(4);
-        else if (Input.GetKeyUp(KeyCode.Alpha5)) SpecialFireArms(5);
+        else if (Input.GetKeyUp(KeyCode.Alpha1) && !shielded) SpecialFireArms(1);
+        else if (Input.GetKeyUp(KeyCode.Alpha2) && !shielded) SpecialFireArms(2);
+        else if (Input.GetKeyUp(KeyCode.Alpha3) && !shielded) SpecialFireArms(3);
+        else if (Input.GetKeyUp(KeyCode.Alpha4) && !shielded) SpecialFireArms(4);
+        else if (Input.GetKeyUp(KeyCode.Alpha5) && !shielded) SpecialFireArms(5);
     }
 
 
@@ -83,6 +85,7 @@ public class TankShooting : MonoBehaviour
 
         Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
         shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
+        shellInstance.GetComponent<ShellExplosion>().playerShell = true;
 
         m_ShootingAudio.clip = m_FireClip;
         m_ShootingAudio.Play();
@@ -98,6 +101,7 @@ public class TankShooting : MonoBehaviour
 
         Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
         shellInstance.velocity = Random.Range(m_MinLaunchForce, distance) * m_FireTransform.forward;
+        shellInstance.GetComponent<ShellExplosion>().playerShell = true;
 
         m_ShootingAudio.clip = m_FireClip;
         m_ShootingAudio.Play();
@@ -121,14 +125,17 @@ public class TankShooting : MonoBehaviour
             m_FireTransform.rotation *= Quaternion.Euler(0, 45, 0);
             Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
             shellInstance.velocity = launchForce * m_FireTransform.forward;
+            shellInstance.GetComponent<ShellExplosion>().playerShell = true;
             m_FireTransform.rotation *= Quaternion.Euler(0, -45, 0);
 
             Rigidbody shellInstance2 = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
             shellInstance2.velocity = launchForce * m_FireTransform.forward;
+            shellInstance2.GetComponent<ShellExplosion>().playerShell = true;
 
             m_FireTransform.rotation *= Quaternion.Euler(0, -45, 0);
             Rigidbody shellInstance3 = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
             shellInstance3.velocity = launchForce * m_FireTransform.forward;
+            shellInstance3.GetComponent<ShellExplosion>().playerShell = true;
             m_FireTransform.rotation *= Quaternion.Euler(0, 45, 0);
         }
 
@@ -162,6 +169,7 @@ public class TankShooting : MonoBehaviour
             else m_FireTransform.rotation *= Quaternion.Euler(0, 10, 0);
             Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
             shellInstance.velocity = launchForce * m_FireTransform.forward;
+            shellInstance.GetComponent<ShellExplosion>().playerShell = true;
             yield return new WaitForSeconds(0.05f);
         }
         m_FireTransform.rotation *= Quaternion.Euler(0, -45, 0);
@@ -176,6 +184,7 @@ public class TankShooting : MonoBehaviour
         shellInstance.GetComponent<ShellExplosion>().m_MaxDamage *= 2;
         shellInstance.GetComponent<ShellExplosion>().m_ExplosionRadius *= 2;
         shellInstance.velocity = launchForce * m_FireTransform.forward;
+        shellInstance.GetComponent<ShellExplosion>().playerShell = true;
 
         yield return null;
     }
@@ -195,6 +204,7 @@ public class TankShooting : MonoBehaviour
             tankTransform.rotation = Quaternion.Slerp(tankTransform.rotation, newTankPos,1f);
             Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
             shellInstance.velocity = launchForce * m_FireTransform.forward;
+            shellInstance.GetComponent<ShellExplosion>().playerShell = true;
             // 16 Shoots per Second = 0.0625 
             yield return new WaitForSeconds(0.0625f);
         }

@@ -11,6 +11,8 @@ public class TankShield : MonoBehaviour {
     private Color effectColor;
     public float resetTimer = 0;
 
+    private TankShooting playerShoot;
+
     public bool death = false;
     public Light lightColor;
 
@@ -19,6 +21,7 @@ public class TankShield : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         power = maxPower;
+        playerShoot = GameObject.FindGameObjectWithTag("Player").GetComponent<TankShooting>();
         //matColor = mat.GetColor("MainColor");
 	}
 
@@ -26,6 +29,8 @@ public class TankShield : MonoBehaviour {
     // Blau voll Geladen -> Grün -> Gelb -> Orange -> Rot Fast leer
 	void Update () {
         ShieldColor();
+
+        playerShoot.shielded = rend.enabled ? true : false;        
 
         if(resetTimer > 0) resetTimer -= Time.deltaTime;
 
@@ -79,8 +84,10 @@ public class TankShield : MonoBehaviour {
         }
         else if (power <= 0)
         {
-            gameObject.GetComponent<MeshRenderer>().enabled = false;
-            gameObject.GetComponent<Light>().enabled = false;
+            //gameObject.GetComponent<MeshRenderer>().enabled = false;
+            //gameObject.GetComponent<Light>().enabled = false;
+            rend.enabled = false;
+            lightColor.enabled = false;
         }
 
         rend.materials[1].color = matColor;
