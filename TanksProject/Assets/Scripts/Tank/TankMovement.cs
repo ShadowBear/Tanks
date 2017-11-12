@@ -159,5 +159,14 @@ public class TankMovement : MonoBehaviour
         }
     }
 
+    //void OnCollisionEnter(Collision col)
+    //{
+    //    m_Rigidbody.angularVelocity = new Vector3(0,0,0);
+    //}
+
+    //void OnCollisionStay(Collision col)
+    //{
+    //    m_Rigidbody.angularVelocity = new Vector3(0, 0, 0);
+    //}
 }
     

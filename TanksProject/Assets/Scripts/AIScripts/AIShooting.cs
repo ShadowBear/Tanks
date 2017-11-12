@@ -63,9 +63,12 @@ public class AIShooting : MonoBehaviour
         {
             attack = false;
         }
-        
-        AIAgent.isStopped =  attack ? true : false;
-        
+
+        if (AIAgent != null)
+        {
+            AIAgent.isStopped = attack ? true : false;
+        }
+        else attack = true;
 
         
         if (attack && !specFire) 
