@@ -13,6 +13,7 @@ public class Menu : MonoBehaviour {
     void Start () {
         menu = gameObject.GetComponentInChildren<Canvas>();
         menu.enabled = false;
+        if (SceneManager.GetActiveScene().buildIndex == 1) menu.enabled = true;
     }
 	
 	// Update is called once per frame
@@ -32,7 +33,8 @@ public class Menu : MonoBehaviour {
 
     public void ExitBtn()
     {
-        Application.Quit();
+        if (SceneManager.GetActiveScene().buildIndex == 1) Application.Quit();
+        else SceneManager.LoadScene(1);
     }
 
     public void Respawn()

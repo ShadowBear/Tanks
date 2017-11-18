@@ -13,6 +13,8 @@ public class TankMovement : MonoBehaviour
     public GameObject shield;
     public GameObject fireRing;
 
+    public TankVirtualJoystick joystick;
+
 
     private string m_MovementAxisName;
     private string m_TurnAxisName;
@@ -20,6 +22,8 @@ public class TankMovement : MonoBehaviour
     private float m_MovementInputValue;
     private float m_TurnInputValue;
     private float m_OriginalPitch;
+
+    Vector3 velocity = Vector3.zero;
 
 
     private void Awake()
@@ -53,10 +57,15 @@ public class TankMovement : MonoBehaviour
 
     private void Update()
     {
+
+#if Unity_STANDALONE || UNITY_WEBPLAYER
         // Store the player's input and make sure the audio for the engine is playing.
         m_MovementInputValue = Input.GetAxis(m_MovementAxisName);
         m_TurnInputValue = Input.GetAxis(m_TurnAxisName);
-
+#else
+        m_MovementInputValue = joystick.Vertical();
+        m_TurnInputValue = joystick.Horizontal();
+#endif
         //EngineAudio();
     }
 
@@ -104,19 +113,32 @@ public class TankMovement : MonoBehaviour
         //Vector3 movement = transform.forward * m_MovementInputValue * m_Speed * Time.deltaTime;
         //m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
 
-        Vector3 velocity = new Vector3 (transform.forward.x * m_MovementInputValue * m_Speed,m_Rigidbody.velocity.y,transform.forward.z * m_MovementInputValue * m_Speed);
+        
+#if Unity_STANDALONE || UNITY_WEBPLAYER
+        velocity = new Vector3 (transform.forward.x * m_MovementInputValue * m_Speed,m_Rigidbody.velocity.y,transform.forward.z * m_MovementInputValue * m_Speed);
         m_Rigidbody.velocity = velocity;
-
+#else
+        velocity.Set(m_MovementInputValue, 0, m_TurnInputValue);
+        velocity = velocity.normalized * m_Speed * Time.deltaTime;
+        m_Rigidbody.MovePosition(transform.position + velocity);
+#endif
     }
 
 
     private void Turn()
     {
         // Adjust the rotation of the tank based on the player's input.
+#if Unity_STANDALONE || UNITY_WEBPLAYER
         float turn = m_TurnInputValue * m_TurnSpeed * Time.deltaTime;
 
         Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
         m_Rigidbody.MoveRotation(m_Rigidbody.rotation * turnRotation);
+#else
+        //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(m_Rigidbody.transform.position), m_TurnSpeed);
+        if(velocity.magnitude > 0.1f) m_Rigidbody.MoveRotation(Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(velocity), m_TurnSpeed));
+#endif
+
+
     }
 
     private void Shield()

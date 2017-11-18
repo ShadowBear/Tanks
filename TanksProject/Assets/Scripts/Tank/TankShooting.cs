@@ -24,6 +24,8 @@ public class TankShooting : MonoBehaviour
     private bool isReloading = false;
     private float reloadTime = 2f;
 
+    private bool touchShoot = false;
+    public TankVirtualJoystick joystick;
 
     
     private string m_FireButton;         
@@ -50,6 +52,16 @@ public class TankShooting : MonoBehaviour
 
     private void Update()
     {
+
+        //Mouse Input as Touch Tested
+        //if (Input.GetKeyDown(KeyCode.Mouse0))
+        //{
+        //    Vector3 mousePosition = Input.mousePosition;
+        //    bool point = RectTransformUtility.RectangleContainsScreenPoint(joystick.GetComponent<Image>().rectTransform, mousePosition, Camera.current);
+        //    if (point) Debug.Log("Punkt liegt im Kasten");
+        //}
+
+#if Unity_STANDALONE || UNITY_WEBPLAYER
         // Track the current state of the fire button and make decisions based on the current launch force.
         m_AimSlider.value = m_MinLaunchForce;
         if (ammu == 0) ammuText.text = "R";
@@ -92,6 +104,43 @@ public class TankShooting : MonoBehaviour
         else if (Input.GetKeyUp(KeyCode.Alpha3) && !shielded) SpecialFireArms(3);
         else if (Input.GetKeyUp(KeyCode.Alpha4) && !shielded) SpecialFireArms(4);
         else if (Input.GetKeyUp(KeyCode.Alpha5) && !shielded) SpecialFireArms(5);
+#else
+        if (Input.touchCount > 0)
+        {
+            Touch[] touches = Input.touches;
+            Touch fireTouch = touches[0];
+            for (int i = 0; i < touches.Length; i++)
+            {
+                bool point = RectTransformUtility.RectangleContainsScreenPoint(joystick.GetComponent<Image>().rectTransform, touches[i].position, Camera.current);
+                if (!point)
+                {
+                    fireTouch = touches[i];
+                    //m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
+                    //m_AimSlider.value = m_CurrentLaunchForce;
+                    //touchShoot = true;
+
+                    //Debug.Log("Punkt liegt im Kasten");
+                }
+                else if (touchShoot)
+                {
+                    touchShoot = false;
+                    Fire();
+                }
+            }
+            if(fireTouch.deltaTime > 0 && !RectTransformUtility.RectangleContainsScreenPoint(joystick.GetComponent<Image>().rectTransform, fireTouch.position, Camera.current))
+            {
+                m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
+                touchShoot = true;
+                //m_AimSlider.value = m_CurrentLaunchForce;
+            }
+            else if(touchShoot)
+            {
+                Fire();
+                touchShoot = false;
+            }
+        }
+            
+#endif
     }
 
 
