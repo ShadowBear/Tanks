@@ -11,6 +11,7 @@ public class TankMovement : MonoBehaviour
     public float m_PitchRange = 0.2f;
 
     public GameObject shield;
+    public bool shieldedAndroid = false;
     public GameObject fireRing;
 
     public TankVirtualJoystick joystick;
@@ -143,6 +144,7 @@ public class TankMovement : MonoBehaviour
 
     private void Shield()
     {
+#if Unity_STANDALONE || UNITY_WEBPLAYER
         if (Input.GetKey(KeyCode.Q))
         {
             //shield.SetActive(true);
@@ -157,6 +159,18 @@ public class TankMovement : MonoBehaviour
             shield.GetComponent<MeshRenderer>().enabled = false;
             shield.GetComponent<Light>().enabled = false;
         }
+#else
+        if (shieldedAndroid)
+        {
+            shield.GetComponent<MeshRenderer>().enabled = true;
+            shield.GetComponent<Light>().enabled = true;
+        }
+        else
+        {
+            shield.GetComponent<MeshRenderer>().enabled = false;
+            shield.GetComponent<Light>().enabled = false;
+        }
+#endif
     }
 
     private void FireRing()

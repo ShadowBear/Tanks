@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.EventSystems;
+using System;
 
 public class TankShooting : MonoBehaviour
 {
@@ -29,9 +31,9 @@ public class TankShooting : MonoBehaviour
 
     
     private string m_FireButton;         
-    private float m_CurrentLaunchForce;  
-    private float m_ChargeSpeed;         
-    private bool m_Fired = true;      
+    public float m_CurrentLaunchForce;  
+    public float m_ChargeSpeed;         
+    public bool m_Fired = true;      
               
 
 
@@ -61,18 +63,18 @@ public class TankShooting : MonoBehaviour
         //    if (point) Debug.Log("Punkt liegt im Kasten");
         //}
 
-#if Unity_STANDALONE || UNITY_WEBPLAYER
-        // Track the current state of the fire button and make decisions based on the current launch force.
-        m_AimSlider.value = m_MinLaunchForce;
         if (ammu == 0) ammuText.text = "R";
         else ammuText.text = ammu.ToString();
 
-        if(ammu <= 0 && !isReloading)
+        if (ammu <= 0 && !isReloading)
         {
             isReloading = true;
             StartCoroutine(ReloadAmmu());
         }
 
+#if Unity_STANDALONE || UNITY_WEBPLAYER
+        // Track the current state of the fire button and make decisions based on the current launch force.
+        
 
         if (m_CurrentLaunchForce >= m_MaxLaunchForce && !m_Fired)
         {
@@ -105,46 +107,59 @@ public class TankShooting : MonoBehaviour
         else if (Input.GetKeyUp(KeyCode.Alpha4) && !shielded) SpecialFireArms(4);
         else if (Input.GetKeyUp(KeyCode.Alpha5) && !shielded) SpecialFireArms(5);
 #else
-        if (Input.touchCount > 0)
-        {
-            Touch[] touches = Input.touches;
-            Touch fireTouch = touches[0];
-            for (int i = 0; i < touches.Length; i++)
-            {
-                bool point = RectTransformUtility.RectangleContainsScreenPoint(joystick.GetComponent<Image>().rectTransform, touches[i].position, Camera.current);
-                if (!point)
-                {
-                    fireTouch = touches[i];
-                    //m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
-                    //m_AimSlider.value = m_CurrentLaunchForce;
-                    //touchShoot = true;
+        //if (Input.touchCount > 0)
+        //{
+        //    Touch[] touches = Input.touches;
+        //    //Touch fireTouch = touches[0];
+        //    for (int i = 0; i < touches.Length; i++)
+        //    {
+        //        bool point = RectTransformUtility.RectangleContainsScreenPoint(joystick.GetComponent<Image>().rectTransform, touches[i].position, Camera.current);
+        //        if (!point && touches[i].phase == TouchPhase.Stationary)
+        //        {
 
-                    //Debug.Log("Punkt liegt im Kasten");
-                }
-                else if (touchShoot)
-                {
-                    touchShoot = false;
-                    Fire();
-                }
-            }
-            if(fireTouch.deltaTime > 0 && !RectTransformUtility.RectangleContainsScreenPoint(joystick.GetComponent<Image>().rectTransform, fireTouch.position, Camera.current))
-            {
-                m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
-                touchShoot = true;
-                //m_AimSlider.value = m_CurrentLaunchForce;
-            }
-            else if(touchShoot)
-            {
-                Fire();
-                touchShoot = false;
-            }
-        }
+        //            m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
+        //            m_AimSlider.value = m_CurrentLaunchForce;
+        //            //touchShoot = true;
+
+        //            //Debug.Log("Punkt liegt im Kasten");
+        //        }
+        //        if (!point && touches[i].phase == TouchPhase.Ended)
+        //        {
+        //            //touchShoot = false;
+        //            Fire();
+        //        }
+        //    }
+        //    //if(fireTouch.deltaTime > 0 && !RectTransformUtility.RectangleContainsScreenPoint(joystick.GetComponent<Image>().rectTransform, fireTouch.position, Camera.current))
+        //    //{
+        //    //    m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
+        //    //    touchShoot = true;
+        //    //    //m_AimSlider.value = m_CurrentLaunchForce;
+        //    //}
+        //    //else if(touchShoot)
+        //    //{
+        //    //    Fire();
+        //    //    touchShoot = false;
+        //    //}
+        //}
             
 #endif
     }
 
 
-    private void Fire()
+    public void LoadShoot()
+    {
+        m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
+        if (m_CurrentLaunchForce >= m_MaxLaunchForce && !m_Fired)
+        {
+            // at max Charge not fired
+            m_CurrentLaunchForce = m_MaxLaunchForce;
+            Fire();
+        }
+        m_AimSlider.value = m_CurrentLaunchForce;
+
+    }
+
+    public void Fire()
     {
         // Instantiate and launch the shell.
        
@@ -161,6 +176,7 @@ public class TankShooting : MonoBehaviour
             m_ShootingAudio.Play();
 
             m_CurrentLaunchForce = m_MinLaunchForce;
+            m_AimSlider.value = m_MinLaunchForce;
         }
         
     }
@@ -172,7 +188,7 @@ public class TankShooting : MonoBehaviour
         m_Fired = true;
 
         Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
-        shellInstance.velocity = Random.Range(m_MinLaunchForce, distance) * m_FireTransform.forward;
+        shellInstance.velocity = UnityEngine.Random.Range(m_MinLaunchForce, distance) * m_FireTransform.forward;
         shellInstance.GetComponent<ShellExplosion>().playerShell = true;
 
         m_ShootingAudio.clip = m_FireClip;
@@ -293,5 +309,4 @@ public class TankShooting : MonoBehaviour
         //m_FireTransform.rotation *= Quaternion.Euler(0, -45, 0);
         yield return null;
     }
-
 }

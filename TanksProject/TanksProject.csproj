@@ -95,6 +95,9 @@
     <Compile Include="Assets\Scripts\AIScripts\EnemySight.cs" />
     <Compile Include="Assets\Scripts\AIScripts\RandomPosition.cs" />
     <Compile Include="Assets\Scripts\AIScripts\StandingTank.cs" />
+    <Compile Include="Assets\Scripts\AndroidControlls\ShieldAndroidButton.cs" />
+    <Compile Include="Assets\Scripts\AndroidControlls\TankAndroidButtons.cs" />
+    <Compile Include="Assets\Scripts\AndroidControlls\TankVirtualJoystick.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraControl.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraScript.cs" />
     <Compile Include="Assets\Scripts\DoorScripts\Door.cs" />
@@ -112,7 +115,6 @@
     <Compile Include="Assets\Scripts\Tank\TankMovement.cs" />
     <Compile Include="Assets\Scripts\Tank\TankPatrol.cs" />
     <Compile Include="Assets\Scripts\Tank\TankShooting.cs" />
-    <Compile Include="Assets\Scripts\Tank\TankVirtualJoystick.cs" />
     <Compile Include="Assets\Scripts\Tile\HoldCharackter.cs" />
     <Compile Include="Assets\Scripts\Tile\MovingPlattform.cs" />
     <Compile Include="Assets\Scripts\UI\UIDirectionControl.cs" />

@@ -22,7 +22,7 @@ public class CameraScript : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
         transform.position = Vector3.SmoothDamp(transform.position, player.transform.position, ref m_MoveVelocity , m_DampTime);
-
+#if Unity_STANDALONE || UNITY_WEBPLAYER
         if (Input.GetKey(KeyCode.Mouse1))
         {
             print("Mouse is in da House");
@@ -31,7 +31,8 @@ public class CameraScript : MonoBehaviour {
 
             //transform.rotation.eulerAngles = new Vector3(0.0f, yaw, 0.0f);
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, yaw, transform.rotation.eulerAngles.z);
-        }
 
+        }
+#endif
     }
 }
