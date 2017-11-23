@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class TankMovement : MonoBehaviour
 {
@@ -23,6 +24,10 @@ public class TankMovement : MonoBehaviour
     private float m_MovementInputValue;
     private float m_TurnInputValue;
     private float m_OriginalPitch;
+
+    private bool frezzed = false;
+    public float frezzeTime = 2;
+    public GameObject iceBlock;
 
     Vector3 velocity = Vector3.zero;
 
@@ -100,6 +105,7 @@ public class TankMovement : MonoBehaviour
     private void FixedUpdate()
     {
         // Move and turn the tank.
+        if (frezzed) return;
         Move();
         Turn();
         Shield();
@@ -113,7 +119,6 @@ public class TankMovement : MonoBehaviour
         //Adjust the position of the tank based on the player's input.
         //Vector3 movement = transform.forward * m_MovementInputValue * m_Speed * Time.deltaTime;
         //m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
-
         
 #if Unity_STANDALONE || UNITY_WEBPLAYER
         velocity = new Vector3 (transform.forward.x * m_MovementInputValue * m_Speed,m_Rigidbody.velocity.y,transform.forward.z * m_MovementInputValue * m_Speed);
@@ -195,14 +200,23 @@ public class TankMovement : MonoBehaviour
         }
     }
 
-    //void OnCollisionEnter(Collision col)
-    //{
-    //    m_Rigidbody.angularVelocity = new Vector3(0,0,0);
-    //}
-
-    //void OnCollisionStay(Collision col)
-    //{
-    //    m_Rigidbody.angularVelocity = new Vector3(0, 0, 0);
-    //}
+    void OnParticleCollision(GameObject particle)
+    {
+        if (particle.tag == "Frezzer" && !frezzed)
+        {
+            frezzed = true;
+            print("FrostParticle hitten");
+            iceBlock.SetActive(true);
+            StartCoroutine(Frozen());
+        }
+    }
+    
+    IEnumerator Frozen()
+    {
+        yield return new WaitForSeconds(frezzeTime);
+        frezzed = false;
+        iceBlock.SetActive(false);
+        yield return null;
+    }
 }
     

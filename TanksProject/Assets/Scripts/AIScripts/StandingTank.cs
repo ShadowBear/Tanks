@@ -11,12 +11,14 @@ public class StandingTank : MonoBehaviour {
     public float smooth = 2.0f;
 
     public float reduceForHeight;
+    private Transform startPosition;
 
     private GameObject player;
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        startPosition = transform;
     }
 
 
@@ -37,6 +39,15 @@ public class StandingTank : MonoBehaviour {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(positionTank), Time.deltaTime * smooth);
         }
     }
+
+    //void  OnTriggerExit(Collider col)
+    //{
+    //    if (col.CompareTag("Player"))
+    //    {
+            
+    //        print("verlasse Trigger");
+    //    }
+    //}
 
     IEnumerator Fire(float launchForce)
     {

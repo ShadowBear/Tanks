@@ -38,7 +38,7 @@ public class TankVirtualJoystick : MonoBehaviour, IDragHandler, IPointerUpHandle
             pos.y = (pos.y / bgImage.rectTransform.sizeDelta.y);
             inputVector = new Vector3((pos.x * 2) - 1, 0, (pos.y * 2) - 1);
             inputVector = (inputVector.magnitude > 1.0f) ? inputVector.normalized : inputVector;
-            Debug.Log(inputVector);
+            //Debug.Log(inputVector);
 
             //Joystick Movement
             joystickImage.rectTransform.anchoredPosition = new Vector3(inputVector.x * (bgImage.rectTransform.sizeDelta.x / 2.5f), inputVector.z * (bgImage.rectTransform.sizeDelta.y / 2.5f));

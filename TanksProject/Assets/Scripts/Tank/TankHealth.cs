@@ -111,16 +111,26 @@ public class TankHealth : MonoBehaviour
 
         if(this.gameObject == GameObject.FindGameObjectWithTag("Player"))
         {
-            RespawnAtCheckPoint();
+            StartCoroutine(RespawnAtCheckPoint());
         }else gameObject.SetActive(false);
 
     }
 
-    private void RespawnAtCheckPoint()
+
+    // Respawn Bug Gegner Stoppen nicht TimeScale geht mit Waitfor Nicht .... //
+    IEnumerator RespawnAtCheckPoint()
     {
         transform.position = lastRespawenPoint.position;
         respawned = true;
         OnEnable();
+
+        //Time.timeScale = 0;
+        //print("Zeit Stopped");
+        //yield return new WaitForSeconds(6);
+        //Time.timeScale = 1;
+        //print("Zeit geht weiter");
+        yield return null;
+
     }
 
     IEnumerator ResetRespawn()
