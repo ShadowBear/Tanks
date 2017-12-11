@@ -42,7 +42,7 @@ public class TankShield : MonoBehaviour {
         if (power < maxPower && power > 0 && resetTimer <= 0 && !death)
         {
 
-            print("Regeneriere Mich");
+            //print("Regeneriere Mich");
             power += (300 * Time.deltaTime);
             if (power > maxPower) power = maxPower;
         }
@@ -71,13 +71,13 @@ public class TankShield : MonoBehaviour {
         {
             //55 255 0
             matColor = new Color(0.2156f, 1, 0, 0.2156f);
-            Debug.Log("Sollte Grün zeigen");
+            //Debug.Log("Sollte Grün zeigen");
             effectColor = new Color(0.2156f, 1, 0, 1);
         }
         else if (power <= maxPower * 0.4 && power > maxPower * 0.2)
         {
             //255 180 0
-            Debug.Log("Sollte Orange zeigen");
+            //Debug.Log("Sollte Orange zeigen");
             matColor = new Color(1, 0.70588f, 0, 0.2156f);
             effectColor = new Color(1, 0.70588f, 0, 1);
         }

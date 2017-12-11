@@ -11,14 +11,14 @@ public class StandingTank : MonoBehaviour {
     public float smooth = 2.0f;
 
     public float reduceForHeight;
-    private Transform startPosition;
+    //private Transform startPosition;
 
     private GameObject player;
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        startPosition = transform;
+        //startPosition = transform;
     }
 
 

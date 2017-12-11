@@ -26,7 +26,7 @@ public class TankShooting : MonoBehaviour
     private bool isReloading = false;
     private float reloadTime = 2f;
 
-    private bool touchShoot = false;
+    //private bool touchShoot = false;
     public TankVirtualJoystick joystick;
 
     

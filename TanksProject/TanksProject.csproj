@@ -90,6 +90,7 @@
     <Compile Include="Assets\PluggableAI\Scripts\PatrolAction.cs" />
     <Compile Include="Assets\PluggableAI\Scripts\State.cs" />
     <Compile Include="Assets\PluggableAI\Scripts\StateController.cs" />
+    <Compile Include="Assets\Scripts\AIScripts\AIController.cs" />
     <Compile Include="Assets\Scripts\AIScripts\AINavMesh.cs" />
     <Compile Include="Assets\Scripts\AIScripts\AIShooting.cs" />
     <Compile Include="Assets\Scripts\AIScripts\EnemySight.cs" />
@@ -104,11 +105,14 @@
     <Compile Include="Assets\Scripts\Camera\CameraScript.cs" />
     <Compile Include="Assets\Scripts\Managers\Arena01.cs" />
     <Compile Include="Assets\Scripts\Managers\Arena02_Castle.cs" />
+    <Compile Include="Assets\Scripts\Managers\GameController.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\Menu.cs" />
+    <Compile Include="Assets\Scripts\Managers\StarsManager.cs" />
     <Compile Include="Assets\Scripts\Managers\TankManager.cs" />
     <Compile Include="Assets\Scripts\ObjectScripts\Door.cs" />
     <Compile Include="Assets\Scripts\ObjectScripts\DoorOpener.cs" />
+    <Compile Include="Assets\Scripts\ObjectScripts\FireTower.cs" />
     <Compile Include="Assets\Scripts\ObjectScripts\WalkButton.cs" />
     <Compile Include="Assets\Scripts\Particel\ShieldParticel.cs" />
     <Compile Include="Assets\Scripts\Particel\TankShield.cs" />

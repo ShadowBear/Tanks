@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class Arena02_Castle : MonoBehaviour {
 
     public Text stageText;
-    int stageCounter = 1;
+    public int stageCounter = 1;
     public GameObject tankAI;
+
+    private bool gamePaused = false;
+    public Menu menu;
 
     public GameObject standingTowerStage2;
     public GameObject standingTowerStage3;
@@ -18,7 +22,9 @@ public class Arena02_Castle : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-
+        GameController.control.levelNumber = 2;
+        GameController.control.temporaryStars[2] = 0;
+        if (GameController.control.starsEarned[2] < 0 || GameController.control.starsEarned[2] > 3) GameController.control.starsEarned[2] = 0;
         standingTowerStage2.SetActive(false);
         standingTowerStage3.SetActive(false);
     }
@@ -31,8 +37,9 @@ public class Arena02_Castle : MonoBehaviour {
 
     IEnumerator InstantiateEnemies(int stage)
     {
+        gamePaused = true;
+        yield return new WaitForSeconds(2f);
         int enemyCounter = 5 * stage;
-
         for (int i = 0; i < enemyCounter; i++)
         {
             int spawnPoint = Random.Range(0, spawnPoints.Length);
@@ -42,6 +49,7 @@ public class Arena02_Castle : MonoBehaviour {
             ai.GetComponent<NavMeshAgent>().Warp(spawnPoints[spawnPoint].position);
             //yield return new WaitForSeconds(1);
         }
+        gamePaused = false;
         yield return null;
     }
 
@@ -56,9 +64,9 @@ public class Arena02_Castle : MonoBehaviour {
 
     void CheckEnemyState()
     {
-        if (GameObject.FindGameObjectWithTag("Enemy") == null && stageCounter < 4 && stageCounter > 0)
+        if (GameObject.FindGameObjectWithTag("Enemy") == null && stageCounter < 5 && stageCounter > 0 && !gamePaused)
         {
-            StartCoroutine(ShowStage());
+            if (stageCounter < 4) StartCoroutine(ShowStage());
             nextStage(stageCounter);
         }
     }
@@ -75,16 +83,38 @@ public class Arena02_Castle : MonoBehaviour {
             case 2:
                 StartCoroutine(InstantiateEnemies(stage));
                 standingTowerStage2.SetActive(true);
+                if (GameController.control.starsEarned[2] < 1)
+                    GameController.control.starsEarned[2] = 1;
+                GameController.control.temporaryStars[2] = 1;
                 stageCounter++;
                 break;
             case 3:
                 StartCoroutine(InstantiateEnemies(stage));
                 standingTowerStage3.SetActive(true);
-                stageCounter = 1;
+                //GameController.control.starsEarned[2] = 2;
+                if (GameController.control.starsEarned[2] < 2)
+                    GameController.control.starsEarned[2] = 2;
+                GameController.control.temporaryStars[2] = 2;
+                stageCounter++;
+                //stageCounter = 1;
+                break;
+            case 4:
+                //GameController.control.starsEarned[2] = 3;
+                if (GameController.control.starsEarned[2] < 3)
+                    GameController.control.starsEarned[2] = 3;
+                GameController.control.temporaryStars[2] = 3;
+                GameController.control.Save();
+                StartCoroutine(Victory());
                 break;
             default:
                 StartCoroutine(InstantiateEnemies(stage));
                 break;
         }
+    }
+    IEnumerator Victory()
+    {
+        menu.playerDeath = true;
+        menu.victory = true;
+        yield return null;
     }
 }

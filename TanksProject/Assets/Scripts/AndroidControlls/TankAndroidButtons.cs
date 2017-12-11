@@ -8,8 +8,8 @@ public class TankAndroidButtons : MonoBehaviour, IPointerUpHandler, IPointerDown
 
     GameObject player;
     TankShooting shootingScript;
-    private float m_CurrentLaunchForce;
-    private float m_ChargeSpeed;
+    //private float m_CurrentLaunchForce;
+    //private float m_ChargeSpeed;
 
     public bool shallShoot = false;
 
@@ -18,8 +18,8 @@ public class TankAndroidButtons : MonoBehaviour, IPointerUpHandler, IPointerDown
     void Start () {
         player = GameObject.FindGameObjectWithTag("Player");
         shootingScript = player.GetComponent<TankShooting>();
-        m_ChargeSpeed = shootingScript.m_ChargeSpeed;
-        m_CurrentLaunchForce = shootingScript.m_MinLaunchForce;
+        //m_ChargeSpeed = shootingScript.m_ChargeSpeed;
+        //m_CurrentLaunchForce = shootingScript.m_MinLaunchForce;
 }
 	
 	// Update is called once per frame

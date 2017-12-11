@@ -21,11 +21,13 @@ public class AIShooting : MonoBehaviour
     public int burstRate = 10;
     public bool attack = false;
 
+    public float attackDelay = 3f;
+
     public float test = 0.1f;
     public float smooth = 2.0f;
 
 
-    private float m_CurrentLaunchForce;
+    //private float m_CurrentLaunchForce;
     private float m_ChargeSpeed;
     private bool m_Fired;
     private bool specFire = false;
@@ -34,6 +36,8 @@ public class AIShooting : MonoBehaviour
 
     private GameObject player;
     private NavMeshAgent AIAgent;
+    private bool waitForStart = true;
+
     //private bool rounding = false;
     //private float timer = 1;
 
@@ -43,13 +47,19 @@ public class AIShooting : MonoBehaviour
         AIAgent = gameObject.GetComponent<NavMeshAgent>();
     }
 
+    void Awake()
+    {
+        StartCoroutine(WaitOnStart());
+    }
+
     private void OnEnable()
     {
-        m_CurrentLaunchForce = m_MinLaunchForce;
+        //m_CurrentLaunchForce = m_MinLaunchForce;
     }
 
     void Update()
     {
+        if (waitForStart) return;
         //if (attack && !m_Fired) m_Fired = true;
         //else if (!attack) m_Fired = false;
         if(IsInvoking("FireAI")) print("Der tud do no wat X.X");
@@ -77,7 +87,15 @@ public class AIShooting : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((player.transform.position - transform.position)), Time.deltaTime * smooth);
         }
     }
-    
+
+    IEnumerator WaitOnStart()
+    {
+        waitForStart = true;
+        yield return new WaitForSeconds(attackDelay);
+        waitForStart = false;
+        yield return null;
+    }
+
     // Schiessen auf den Spieler
     IEnumerator FireAI(float distance)
     {
@@ -111,7 +129,7 @@ public class AIShooting : MonoBehaviour
 
         m_ShootingAudio.clip = m_FireClip;
         m_ShootingAudio.Play();
-        m_CurrentLaunchForce = m_MinLaunchForce;
+        //m_CurrentLaunchForce = m_MinLaunchForce;
 
         //yield return new WaitForSeconds(0.5f);
         //m_Fired = false;

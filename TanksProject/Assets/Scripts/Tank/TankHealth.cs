@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class TankHealth : MonoBehaviour
@@ -12,6 +13,9 @@ public class TankHealth : MonoBehaviour
     public GameObject m_ExplosionPrefab;
     public GameObject shieldObject = null;
     public TankShield tankShield;
+    public Image dmgFrame;
+
+    public Menu menu;
 
     public bool indestructable = false;
     public bool respawned = false;
@@ -38,8 +42,9 @@ public class TankHealth : MonoBehaviour
     {
         m_CurrentHealth = m_StartingHealth;
         m_Dead = false;
-
+        if(gameObject.CompareTag("Player"))menu.playerDeath = false;
         SetHealthUI();
+        if(this.CompareTag("Player")) dmgFrame.CrossFadeAlpha(0, 0.01f, false);
     }
     
 
@@ -69,6 +74,7 @@ public class TankHealth : MonoBehaviour
             else
             {
                 m_CurrentHealth -= amount;
+                StartCoroutine(DMGFrame());
                 SetHealthUI();
                 if (m_CurrentHealth <= 0f && !m_Dead)
                 {
@@ -111,7 +117,14 @@ public class TankHealth : MonoBehaviour
 
         if(this.gameObject == GameObject.FindGameObjectWithTag("Player"))
         {
-            StartCoroutine(RespawnAtCheckPoint());
+            GameController.control.Save();
+            print("speicher Daten");
+            //Level Choise Wählen
+            //SceneManager.LoadScene(1);
+
+            menu.playerDeath = true;
+
+            //StartCoroutine(RespawnAtCheckPoint());
         }else gameObject.SetActive(false);
 
     }
@@ -139,7 +152,15 @@ public class TankHealth : MonoBehaviour
         GameObject.FindGameObjectWithTag("Player").GetComponent<TankHealth>().respawned = false;
         corStarted = false;
         yield return null;
-
+    }
+    IEnumerator DMGFrame()
+    {
+        //dmgFrame.enabled = true;
+        dmgFrame.CrossFadeAlpha(1, 0.5f, false);
+        yield return new WaitForSeconds(0.5f);
+        //dmgFrame.enabled = false;
+        dmgFrame.CrossFadeAlpha(0, 0.5f, false);
+        yield return null;
     }
 
 }

@@ -13,8 +13,8 @@ public class AINavMesh : MonoBehaviour {
     private GameObject player;
     public float maxDistanceToPlayer = 5f;      
     public float smooth = 2.0f;
-    private float fireRate = 2;
-    private float fireCounter = 0;
+    //private float fireRate = 2;
+    //private float fireCounter = 0;
 
     public LayerMask playerMask;
     public float scanRadius;

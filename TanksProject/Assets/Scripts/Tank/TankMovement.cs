@@ -205,7 +205,7 @@ public class TankMovement : MonoBehaviour
         if (particle.tag == "Frezzer" && !frezzed)
         {
             frezzed = true;
-            print("FrostParticle hitten");
+            //print("FrostParticle hitten");
             iceBlock.SetActive(true);
             StartCoroutine(Frozen());
         }

@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class RandomPosition : MonoBehaviour {
 
     NavMeshAgent nav;
-    float timec = 0;
+    //float timec = 0;
     public int range = 5;
 
     public int radius = 5;

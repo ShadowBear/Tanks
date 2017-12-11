@@ -57,7 +57,7 @@ public class ShellExplosion : MonoBehaviour
                 {
                     float damage = CalculateDamage(targetEnemy.GetComponent<Transform>().position);
                     targetHealth.TakeDamage(damage);
-                    print("Mach dem Gegner: " + damage +" Schaden");
+                    //print("Mach dem Gegner: " + damage +" Schaden");
                 }
                 if (cubeDes != null)
                 {
