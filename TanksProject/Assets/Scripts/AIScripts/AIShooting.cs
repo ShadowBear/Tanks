@@ -26,8 +26,6 @@ public class AIShooting : MonoBehaviour
     public float test = 0.1f;
     public float smooth = 2.0f;
 
-
-    //private float m_CurrentLaunchForce;
     private float m_ChargeSpeed;
     private bool m_Fired;
     private bool specFire = false;
@@ -38,8 +36,6 @@ public class AIShooting : MonoBehaviour
     private NavMeshAgent AIAgent;
     private bool waitForStart = true;
 
-    //private bool rounding = false;
-    //private float timer = 1;
 
     void Start()
     {
@@ -60,8 +56,6 @@ public class AIShooting : MonoBehaviour
     void Update()
     {
         if (waitForStart) return;
-        //if (attack && !m_Fired) m_Fired = true;
-        //else if (!attack) m_Fired = false;
         if(IsInvoking("FireAI")) print("Der tud do no wat X.X");
 
         launchForce = (player.transform.position - transform.position).magnitude;
@@ -129,10 +123,6 @@ public class AIShooting : MonoBehaviour
 
         m_ShootingAudio.clip = m_FireClip;
         m_ShootingAudio.Play();
-        //m_CurrentLaunchForce = m_MinLaunchForce;
-
-        //yield return new WaitForSeconds(0.5f);
-        //m_Fired = false;
         yield return null;
     }
 
@@ -149,19 +139,6 @@ public class AIShooting : MonoBehaviour
 
     IEnumerator SpecWeap1()
     {
-            //m_FireTransform.rotation *= Quaternion.Euler(0, 45, 0);
-            //Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
-            //shellInstance.velocity = launchForce * m_FireTransform.forward;
-            //m_FireTransform.rotation *= Quaternion.Euler(0, -45, 0);
-
-            //Rigidbody shellInstance2 = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
-            //shellInstance2.velocity = launchForce * m_FireTransform.forward;
-
-            //m_FireTransform.rotation *= Quaternion.Euler(0, -45, 0);
-            //Rigidbody shellInstance3 = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
-            //shellInstance3.velocity = launchForce * m_FireTransform.forward;
-            //m_FireTransform.rotation *= Quaternion.Euler(0, 45, 0);
-
         Rigidbody shellInstance;
         m_FireTransform.rotation *= Quaternion.Euler(0, 45, 0);
         for (int i = 0; i < 3; i++)
@@ -181,12 +158,6 @@ public class AIShooting : MonoBehaviour
 
     IEnumerator SpecWeap2()
     {
-        //StartCoroutine(SpecWeap1());
-        //yield return new WaitForSeconds(0.2f);
-        //StartCoroutine(SpecWeap1());
-        //yield return new WaitForSeconds(0.2f);
-        //StartCoroutine(SpecWeap1());
-
         Rigidbody shellInstance;
         for (int i = 0; i < 3; i++)
         {
@@ -229,7 +200,6 @@ public class AIShooting : MonoBehaviour
 
     IEnumerator SpecWeap4()
     {
-        //float launchForce = 18f;
         Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
         shellInstance.transform.localScale *= 3;
         shellInstance.GetComponent<ShellExplosion>().m_MaxDamage *= 2;
@@ -248,11 +218,9 @@ public class AIShooting : MonoBehaviour
         //          32 = 2 Rounds ....
         specFire = true;
         int fireRate = 32;
-        //float launchForce = 18f;
 
         for (int i = 0; i < fireRate; i++)
         {
-            //if (i < fireRate / 2) m_FireTransform.rotation *= Quaternion.Euler(0, -10, 0);
             //Shoot in 360 Degree with 16 Bullets
             Quaternion newTankPos = transform.rotation * Quaternion.Euler(0, 22.5f, 0);
             transform.rotation = Quaternion.Slerp(transform.rotation, newTankPos, 1f);
@@ -261,7 +229,6 @@ public class AIShooting : MonoBehaviour
             // 16 Shoots per Second = 0.0625 
             yield return new WaitForSeconds(0.0625f);
         }
-        //m_FireTransform.rotation *= Quaternion.Euler(0, -45, 0);
         specFire = false;
 
         

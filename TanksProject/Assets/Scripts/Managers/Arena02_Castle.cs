@@ -43,11 +43,8 @@ public class Arena02_Castle : MonoBehaviour {
         for (int i = 0; i < enemyCounter; i++)
         {
             int spawnPoint = Random.Range(0, spawnPoints.Length);
-            //spawnPoints[].position = new Vector3(spawnPoints[i].position.x - 3, spawnPoints[i].position.y - 1, spawnPoints[i].position.z);
             GameObject ai = Instantiate(tankAI, spawnPoints[spawnPoint], true);
-            //ai.transform.position = spawnPoints[spawnPoint].position;
             ai.GetComponent<NavMeshAgent>().Warp(spawnPoints[spawnPoint].position);
-            //yield return new WaitForSeconds(1);
         }
         gamePaused = false;
         yield return null;
@@ -78,7 +75,7 @@ public class Arena02_Castle : MonoBehaviour {
             case 1:
                 StartCoroutine(InstantiateEnemies(stage));
                 stageCounter++;
-                print("Round 1");
+                //print("Round 1");
                 break;
             case 2:
                 StartCoroutine(InstantiateEnemies(stage));
@@ -99,7 +96,6 @@ public class Arena02_Castle : MonoBehaviour {
                 //stageCounter = 1;
                 break;
             case 4:
-                //GameController.control.starsEarned[2] = 3;
                 if (GameController.control.starsEarned[2] < 3)
                     GameController.control.starsEarned[2] = 3;
                 GameController.control.temporaryStars[2] = 3;

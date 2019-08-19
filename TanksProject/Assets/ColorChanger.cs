@@ -48,6 +48,6 @@ public class ColorChanger : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         cube.material.color =  g.Evaluate((Time.time * speed % 1f));
-        Debug.Log(g.Evaluate(Time.deltaTime));
+        //Debug.Log(g.Evaluate(Time.deltaTime));
     }
 }

@@ -85,9 +85,9 @@ public class AINavMesh : MonoBehaviour {
             if (!isPatrolling)
             {
                 Patrol();
-                print("Patroll ich wirklich");
+                //print("Patroll ich wirklich");
             }
-            print("Respawned jetzt also Patroll ich");
+            //print("Respawned jetzt also Patroll ich");
             return;
         }
 
@@ -121,7 +121,7 @@ public class AINavMesh : MonoBehaviour {
         if(isHearable && !playerInSight)
         {
             Chase();
-            Debug.Log("ICh Höre und verfolge");
+            //Debug.Log("ICh Höre und verfolge");
             //LookForThePlayer(player.transform.position);
         }
         

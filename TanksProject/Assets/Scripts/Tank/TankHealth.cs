@@ -118,7 +118,7 @@ public class TankHealth : MonoBehaviour
         if(this.gameObject == GameObject.FindGameObjectWithTag("Player"))
         {
             GameController.control.Save();
-            print("speicher Daten");
+            //print("speicher Daten");
             //Level Choise Wählen
             //SceneManager.LoadScene(1);
 
@@ -136,12 +136,6 @@ public class TankHealth : MonoBehaviour
         transform.position = lastRespawenPoint.position;
         respawned = true;
         OnEnable();
-
-        //Time.timeScale = 0;
-        //print("Zeit Stopped");
-        //yield return new WaitForSeconds(6);
-        //Time.timeScale = 1;
-        //print("Zeit geht weiter");
         yield return null;
 
     }
@@ -155,10 +149,8 @@ public class TankHealth : MonoBehaviour
     }
     IEnumerator DMGFrame()
     {
-        //dmgFrame.enabled = true;
         dmgFrame.CrossFadeAlpha(1, 0.5f, false);
         yield return new WaitForSeconds(0.5f);
-        //dmgFrame.enabled = false;
         dmgFrame.CrossFadeAlpha(0, 0.5f, false);
         yield return null;
     }

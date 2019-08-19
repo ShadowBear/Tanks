@@ -25,7 +25,6 @@ public class TankVirtualJoystick : MonoBehaviour, IDragHandler, IPointerUpHandle
     void Start()
     {
         bgImage = GetComponent<Image>();
-        //joystickImage = GetComponentInChildren<Image>();
         joystickImage = transform.GetChild(0).GetComponent<Image>();
     }
 

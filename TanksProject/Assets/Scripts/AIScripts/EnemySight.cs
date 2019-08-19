@@ -80,8 +80,6 @@ public class EnemySight : MonoBehaviour {
             if (CalculatePathLength(player.transform.position) <= col.radius * 0.5d)
             {
                 personalLastSighting = player.transform.position;
-                //Teste
-                Debug.Log("Player in Hörweite");
                 if(!playerInSight) aiController.isHearable = true;
             }
             else aiController.isHearable = false;

@@ -77,7 +77,7 @@ public class Arena01 : MonoBehaviour {
             case 1:
                 StartCoroutine(InstantiateEnemies());
                 stageCounter++;
-                print("Round 1");
+                //print("Round 1");
                 break;
             case 2:
                 StartCoroutine(InstantiateEnemies());

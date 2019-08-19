@@ -25,7 +25,7 @@ public class FireTower : MonoBehaviour {
 
     void ChangeAttackState()
     {
-        Debug.Log("Wechsel State JETZT");
+        //Debug.Log("Wechsel State JETZT");
         var x = fireParticle.shape;
         i++;
         if (i % 2 == 0)

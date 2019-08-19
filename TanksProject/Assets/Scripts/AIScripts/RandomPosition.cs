@@ -28,66 +28,7 @@ public class RandomPosition : MonoBehaviour {
         nav = gameObject.GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
     }
-
-
-
-
-    //// Update is called once per frame
-    //void Update () {
-
-
-    //    //Abfragen wie weit der Spieler entfernt ist und ob er auf die KI schiesst
-    //    if (distanceToPlayer > Mathf.Abs((player.transform.position - transform.position).magnitude))
-    //    {
-    //        if (!player.GetComponent<TankShooting>().getFired())
-    //        {
-    //            Vector3 direction = player.transform.position - transform.position;
-    //            float angle = Vector3.Angle(direction, transform.forward);
-
-    //            //schiesst er in die Richtung der KI -> Ausweichen (Funktionierte nicht immer)
-    //            if (angle < fieldOfViewAngle * 0.5f)
-    //            {
-
-    //                if (!isDodging) RandomDodge();
-
-    //                //Raycast weggelassen/hat nicht richtig funktioniert =(
-
-    //                //RaycastHit hit;
-    //                //if (Physics.Raycast(transform.position + (transform.up / 2), direction.normalized, out hit, 25f))
-    //                //{
-    //                //    if (hit.collider.gameObject == player)
-    //                //    {
-
-
-
-    //                //    }
-    //                //}
-    //            }
-    //            //if (!isDodging) RandomDodge();
-    //        }
-    //    }
-    //    //Sobald die KI fertig mit ausweichen -> Attack
-    //    if((dodgeit-transform.position).magnitude < accuracy && isDodging)
-    //    {
-    //        gameObject.GetComponent<AIShooting>().FireAI((dodgeit - transform.position).magnitude);
-    //        isDodging = false;
-    //        gameObject.GetComponent<AINavMesh>().shallDodge = false;
-    //    }
-
-    //    //Reset des Ausweichens falls irgendwas schief geht
-    //    if (isDodging)
-    //    {
-    //        resetTime -= Time.deltaTime;
-    //        if (resetTime <= 0)
-    //        {
-    //            resetTime = 5;
-    //            isDodging = false;
-    //            gameObject.GetComponent<AINavMesh>().shallDodge = false;
-    //        }
-    //    }
-
-    //}
-
+    
     // Update is called once per frame
     void Update()
     {
@@ -104,23 +45,9 @@ public class RandomPosition : MonoBehaviour {
                 //schiesst er in die Richtung der KI -> Ausweichen (Funktionierte nicht immer)
                 if (angle < fieldOfViewAngle * 0.5f)
                 {
-                    print("Spieler schießt in Richtung Gegner! Sollte besser Ausweichen x.x");
+                    //print("Spieler schießt in Richtung Gegner! Sollte besser Ausweichen x.x");
                     if (!isDodging) RandomDodge();
-
-                    //Raycast weggelassen/hat nicht richtig funktioniert =(
-
-                    //RaycastHit hit;
-                    //if (Physics.Raycast(transform.position + (transform.up / 2), direction.normalized, out hit, 25f))
-                    //{
-                    //    if (hit.collider.gameObject == player)
-                    //    {
-
-
-
-                    //    }
-                    //}
                 }
-                //if (!isDodging) RandomDodge();
             }
         }
         //Sobald die KI fertig mit ausweichen -> Attack
@@ -140,7 +67,7 @@ public class RandomPosition : MonoBehaviour {
                 gameObject.GetComponent<AINavMesh>().shallDodge = false;
                 gameObject.GetComponent<AIShooting>().attack = true;
 
-                print("Fehler beim Dodgen");
+                //print("Fehler beim Dodgen");
                 ResetDodgeSpeed();
             }
         }
@@ -155,15 +82,13 @@ public class RandomPosition : MonoBehaviour {
 
         while (Mathf.Abs(angle) >= 10)
         {
-            //transform.rotation *= Quaternion.Euler(0, 1, 0);
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((player.transform.position - transform.position)), Time.deltaTime * smooth);
             yield return new WaitForSeconds(0.15f);
             direction = player.transform.position - transform.position;
             angle = Vector3.Angle(direction, transform.forward);
             nav.isStopped = true;
         }        
-
-        //gameObject.GetComponent<AIShooting>().FireAI((transform.position - player.transform.position).magnitude);
+        
 
         isDodging = false;
         gameObject.GetComponent<AINavMesh>().shallDodge = false;
@@ -176,7 +101,7 @@ public class RandomPosition : MonoBehaviour {
     // Zufaellige position in der naehe bestimmen -> zu dieser wird ausgewichen
     void RandomDodge()
     {
-        Debug.Log("Ich Dodge Jetzt");
+        //Debug.Log("Ich Dodge Jetzt");
         isDodging = true;
         gameObject.GetComponent<AINavMesh>().shallDodge = true;
         float getawayX = Random.Range(-range, range);
